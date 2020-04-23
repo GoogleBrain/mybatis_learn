@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.k.mybatis_learn.mapper.StudentMapper">
+
+    <select id="queryById" resultType="cn.k.mybatis_learn.domain.StudentDomain"
+            parameterType="cn.k.mybatis_learn.domain.StudentDomain">
+        select id,name from student
+        <where>
+        <if test="id!=null">
+            and id=#{id}
+        </if>
+        <if test="name!=null">
+            and name=#{name}
+        </if>
+        </where>
+    </select>
+
+    <insert id="insertkkk" parameterType="cn.k.mybatis_learn.domain.StudentDomain" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into student(name) values(#{name})
+    </insert>
+
+    <insert id="insertList" parameterType="list">
+        insert into student(name)
+        values
+        <foreach collection="list" item="a" separator=",">
+            ( #{a.name})
+        </foreach>
+    </insert>
+
+    <select id="queryByIdbydaole" resultType="cn.k.mybatis_learn.domain.StudentDomain"
+            parameterType="cn.k.mybatis_learn.domain.StudentDomain">
+        select id,name  from ${name}
+    </select>
+
+    <update id="update" parameterType="cn.k.mybatis_learn.domain.StudentDomain">
+        update student
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="age!=null">age=#{age},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--传集合-->
+    <select id="queryByIdForeach" parameterType="list" resultType="cn.k.mybatis_learn.domain.StudentDomain">
+        select * from student
+        <where>1=1
+            <if test="list!=null">
+                and id in
+                <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--传数组-->
+    <select id="queryByIdForeach2" parameterType="list" resultType="cn.k.mybatis_learn.domain.StudentDomain">
+        select * from student
+        <where>1=1
+            <if test="array!=null">
+                and id in
+                <foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <!--传map-->
+    <select id="queryByIdForeach3" parameterType="map" resultType="cn.k.mybatis_learn.domain.StudentDomain">
+        select * from student
+        <where>1=1
+            <if test="enk!=null">
+                and id in
+                <foreach collection="enk.entrySet()" index="index" item="item" open="(" close=")" separator=",">
+                    #{item.value}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectresultmap" resultType="map">
+        select * from student where id=1
+    </select>
+
+
+
+    <insert id="insertTrim" parameterType="cn.k.mybatis_learn.domain.StudentDomain">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="age!=null">
+                age,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="age!=null">
+                #{age},
+            </if>
+        </trim>
+    </insert>
+</mapper>
